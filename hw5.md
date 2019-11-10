@@ -105,19 +105,20 @@ Make spaghetti plot for observation data
 
 ``` r
 patient_data_clean %>% 
-  ggplot(aes(x = week, y = observation, group = arm, color = arm)) +
-  geom_point(size = 2, alpha = 0.5) + 
-  geom_path(alpha = 0.7) + 
-  labs(
+  ggplot(aes(x = week,                  #set x, y variables and group by arm for ggplot
+             y = observation, 
+             group = arm, 
+             color = arm)) +
+  geom_point(size = 2, alpha = 0.5) +   #customize geom points
+  geom_path(alpha = 0.7) +              #draw lines (use geom_path)
+  labs(                                 #annotate graph
     title = "Data on each subject in control and experimental arm \noberseved over 8 weeks",
     y = "Observation (value)", 
     x= "Week") +
-  viridis::scale_color_viridis(
-    discrete = TRUE) + 
-  theme_bw() +
-  theme(legend.position = "bottom",
-        plot.title = element_text(
-          hjust = 0.5, size=12, face='bold'))
+  viridis::scale_color_viridis(discrete = TRUE) + #set viridis color theme
+  theme_bw() +                       
+  theme(legend.position = "bottom",     #customize annotations
+        plot.title = element_text( hjust = 0.5, size=12, face='bold'))
 ```
 
 ![](hw5_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
@@ -136,21 +137,39 @@ not helpful to compare participants with same ID across control and
 experimental group. However, breaking down into control/experimental
 group and assign color to each subject ID can be helpful in showing how
 each participant is responding to the treatment (in the experimental
-group), as well as in the control group (if it’s SOC). For instance, we
-can see more variability observed at week 1 in the experimental group
-versus control, which might indicate the treatment is initially more
-effective on certain participants and less on others.
+group), as well as in the control group (if it’s SOC). For instance, in
+the plot below, we can see more variability observed at week 1 in the
+experimental group versus control, which might indicate the treatment is
+initially more effective on certain participants and less on others.
 
 ``` r
 patient_data_clean %>% 
-  ggplot(aes(x = week, y = observation, group = arm, color = id)) +
+  ggplot(aes(x = week,              #same as above, but color differentiated by subject ID
+             y = observation, 
+             group = arm, 
+             color = id)) +
   geom_path() + 
   labs(title = "Data on each subject in control and experimental arm oberseved over 8 weeks") +
   viridis::scale_color_viridis(discrete = TRUE) + 
   theme_bw() +
-  theme(legend.position = "bottom",
+  theme(legend.position = "bottom", 
         plot.title = element_text(hjust = 0.5, size=12, face='bold')) + 
-  facet_grid(~arm)
+  facet_grid(~arm)                  #two panels by treatment arm 
 ```
 
-![](hw5_files/figure-gfm/spaghetti%20plot-1.png)<!-- -->
+![](hw5_files/figure-gfm/extra%20spaghetti%20plot%20with%20facet_grid%20looking%20at%20arms%20differently-1.png)<!-- -->
+
+## Problem 3
+
+``` r
+set.seed(77)
+
+sim_regression = function(n = 30, beta0 = 2, beta1) { #make function for with set paramaters "variable" beta1
+    sim_data = tibble(                                #tibble with x explanatory variable following normal distribution with mean = 0 and sd = 1
+    x = rnorm(n, mean = 0, sd = 1),
+    y = beta0 + beta1 * x + rnorm(n, 0, sqrt(50))     #simple linear regression model with beta 
+  )
+  ls_fit = lm(y ~ x, data = sim_data)                 #fit a linear reg model of y on x 
+  broom::tidy(ls_fit)[2,c(2,5)]                       #use broom:tidy to get estimated slope and its p-value for each simple linear regression model
+}
+```
