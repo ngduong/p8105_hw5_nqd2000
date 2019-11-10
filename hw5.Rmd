@@ -85,3 +85,22 @@ patient_data %>%
                           "exp" = "experimental")) %>% 
           select(-c("a", "A","B","C"))                  #drop variables that don't give necessary info
 ```
+
+Make spaghetti plot for observation data 
+```{r}
+patient_data_clean %>% 
+  ggplot(aes(x = week, y = observation, group = arm, color = arm)) +
+  geom_point(size = 2, alpha = 0.5) + 
+  geom_path(alpha = 0.7) + 
+  labs(
+    title = "Data on each subject in control and experimental arm \noberseved over 8 weeks",
+    y = "Observation (value)", 
+    x= "Week") +
+  viridis::scale_color_viridis(
+    discrete = TRUE) + 
+  theme_bw() +
+  theme(legend.position = "bottom",
+        plot.title = element_text(
+          hjust = 0.5, size=12, face='bold'))
+```
+
