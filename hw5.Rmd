@@ -1,0 +1,16 @@
+---
+title: "P8105 -- Homework 5"
+author: "Ngoc Duong -- nqd2000 "
+date: "11/6/2019"
+output: github_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r message = FALSE, warning = FALSE}
+library(readr)
+library(tidyverse)
+library(ggplot2)
+library(purrr)
+```
+
