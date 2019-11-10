@@ -69,7 +69,34 @@ head(iris_imputed, 10)
 file.list =
   tibble(path = list.files(path = "./data",     #use list.files to list all csv file names in data folder
                            pattern="*.csv", 
-                           full.names = TRUE)) %>%    
+                           full.names = TRUE))
+
+patient_data =
+  file.list %>% 
   mutate(data = map(path, read_csv)) %>%        #use map to apply read_csv to read all file names in (as list), and assign those to column data
   unnest()                                      #unnest list  
+```
+
+Now we tidy the dataframe: break file names (path) down into arm and
+subject ID, tidy weekly observations, and do any other tidying that’s
+necessary
+
+``` r
+patient_data_clean = 
+patient_data %>% 
+  extract(path,                                         #break path character variable down
+          regex = "^(.*?)/(.*?)/(.*?)_(.*?)\\.(.*?)$",  #using regular expression specifying "/", "_", and "." as separators
+          into = c("A","B","arm", "id", "C")) %>%       #separate into smaller components (some are necessary info; some aren't)
+          pivot_longer(
+             week_1:week_8,                             #make df longer 
+             names_to = "week",                         #collapse 8 week columns into one week column
+             values_to = "observation") %>%             #corresponding observations go to variable value
+          separate(week, into = c("a","week"), sep = "_") %>% #get the number of week from week column
+          mutate(id = factor(id),                       #make factor id and week 
+                 week = factor(week),
+                 arm =                                  #recode arm variable
+                   recode(arm,
+                          "con" = "control",
+                          "exp" = "experimental")) %>% 
+          select(-c("a", "A","B","C"))                  #drop variables that don't give necessary info
 ```
