@@ -48,3 +48,16 @@ After replacing missing values according to the set rules, a glimpse at the "fil
 ```{r}
 head(iris_imputed, 10)
 ```
+
+
+## Problem 2
+```{r, warning = FALSE, message = FALSE}
+# iterate over file names and read in data for each subject using purrr::map and saving the result as a new variable in the dataframe
+file.list =
+  tibble(path = list.files(path = "./data",     #use list.files to list all csv file names in data folder
+                           pattern="*.csv", 
+                           full.names = TRUE)) %>%    
+  mutate(data = map(path, read_csv)) %>%        #use map to apply read_csv to read all file names in (as list), and assign those to column data
+  unnest()                                      #unnest list  
+```
+
