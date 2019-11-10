@@ -14,3 +14,37 @@ library(ggplot2)
 library(purrr)
 ```
 
+## Problem 1
+```{r}
+#get dataset with missing values 
+set.seed(10)
+
+iris_with_missing = iris %>% 
+  map_df(~replace(.x, sample(1:150, 20), NA)) %>%
+  mutate(Species = as.character(Species)) %>% 
+  janitor::clean_names()
+```
+
+```{r}
+# write a function that follows set rules 
+rep_func = function(x){                #start function taking column x as argument
+  if (is.numeric(x)) {                 #set condition if x is numeric then...
+    replace(x,                         #replace in column x...
+            is.na(x),                  #values that are NA...
+            round(                     #with the average of the other observations that are non NA's
+              mean(x, na.rm = TRUE),
+              2))
+    }
+ else if (is.character(x)) {           #set condition if column x is character then...
+              replace(x,               #replace in column x...
+                      is.na(x),        #values that are NAs...
+                      "virginica")     #with "virginica"
+}}
+
+iris_imputed = map_df(iris_with_missing, rep_func)  #"map" the function on iris_with_missing using map_df
+```
+
+After replacing missing values according to the set rules, a glimpse at the "filled-in" dataset:
+```{r}
+head(iris_imputed, 10)
+```
