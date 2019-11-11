@@ -199,7 +199,7 @@ sim_results %>%
              y = pct_rej, 
              fill = beta1)) + 
   geom_bar(stat = "identity") +           #create bar graph
-  labs(title = "Percentage of rejected null hypotheses across different values of b1",
+  labs(title = "Percentage of rejected null hypotheses across different values of β̂1",
        subtitle = "at 0.05 significance level",
        x = "β1",
        y = "Proportion rejected (%)") +
@@ -257,3 +257,22 @@ sim_results_df %>%
 ```
 
 ![](hw5_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+
+Is the sample average of β̂ 1 across tests for which the null is
+rejected approximately equal to the true value of β1? Why or why not?
+
+We can see the averages of slope estimates β̂1 (across all tests) are
+close to the true parameter β1. The sample average of β̂1 across tests
+for which the null is rejected is closer to the true value of β1 when β1
+is much different from 0.
+
+When we take a sample of estimated slopes based on criteria p \< 0.05,
+it is not random sampling, and therefore, the sample mean – average of
+estimates for each β1– might be biased. This can be observed through how
+far off the slope estimates are in the rejected sample from the true
+paramater. However, as the parameter increases, β̂1 estimates the
+paramater better. This is because the power is large when the effect
+size is large, resulting in more (false) nulls being rejected (hence,
+very large sample of slope estimates – close to the size of the original
+simulation sample), and in this simulation where the OLS assumptions are
+satisfied, the estimators are asymptotically unbiased.
