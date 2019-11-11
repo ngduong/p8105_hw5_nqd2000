@@ -176,15 +176,15 @@ sim_regression = function(n = 30, beta0 = 2, beta1) { #make function for with se
 
 ``` r
 sim_results = 
-  tibble(beta1 = c(0, 1, 2, 3, 4, 5, 6)) %>%            #start with a 6x1 tibble with true set b1 values 
+  tibble(beta1 = c(0, 1, 2, 3, 4, 5, 6)) %>%        #start with a 6x1 tibble with true set b1 values 
   mutate(
-    output_lists = map(.x = beta1,                      #set values to iterate over as b1
-                       ~rerun(100,                   #rerun a demo of 100 estimates per b1
+    output_lists = map(.x = beta1,                  #set values to iterate over as b1
+                       ~rerun(10000,                #rerun a demo of 100 estimates per b1
                               sim_regression(beta1 = .x))), #mass apply using function sim_regression defined above
-    estimate_dfs = map(output_lists,                 #mass apply bind_rows to output_lists
+    estimate_dfs = map(output_lists,                #mass apply bind_rows to output_lists
                        bind_rows)) %>%         
-  select(-output_lists) %>%                          #deselect output_lists
-  unnest(estimate_dfs)                               #unnest list estimate_dfs to get tibble
+  select(-output_lists) %>%                         #deselect output_lists
+  unnest(estimate_dfs)                              #unnest list estimate_dfs to get tibble
 ```
 
 Find the proportion of null hypotheses that are rejected under
@@ -194,7 +194,7 @@ significance level 0.05 (estimate different from 0):
 sim_results %>% 
   filter(p.value < 0.05) %>%              #filter out only p-values less than 0.05 
   group_by(beta1) %>%                     #group by true parameter
-  summarize(pct_rej = 100*n()/100)%>%     #create variable pct
+  summarize(pct_rej = 100*n()/10000)%>%   #create variable pct
   ggplot(aes(x = factor(beta1),           #set variables for x, y axes and by group (beta1)
              y = pct_rej, 
              fill = beta1)) + 
@@ -257,9 +257,6 @@ sim_results_df %>%
 ```
 
 ![](hw5_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
-
-Is the sample average of β̂ 1 across tests for which the null is
-rejected approximately equal to the true value of β1? Why or why not?
 
 We can see the averages of slope estimates β̂1 (across all tests) are
 close to the true parameter β1. The sample average of β̂1 across tests
