@@ -157,7 +157,7 @@ Find the proportion of null hypotheses that are rejected under significance leve
 sim_results %>% 
   filter(p.value < 0.05) %>%              #filter out only p-values less than 0.05 
   group_by(beta1) %>%                     #group by true parameter
-  summarize(pct_rej = 100*n()/10000)%>%   #create variable pct_rej by dividing counts per beta1 by the original sample size 10000
+  summarize(pct_rej = 100*n()/10000)%>%   #create variable pct_rej by dividing counts per beta1 by the original sample size 10000 and multiply by 100 (scale up out of 100 percent)
   ggplot(aes(x = factor(beta1),           #set variables for x, y axes and by group (beta1)
              y = pct_rej, 
              fill = beta1)) + 
