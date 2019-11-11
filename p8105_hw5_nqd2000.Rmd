@@ -210,7 +210,7 @@ sim_results_df %>%
   scale_y_continuous(breaks = seq(0, 6, by = 1)) 
 ```
 
-We can see the averages of slope estimates β̂1 (across all tests) are close to the true parameter β1. The sample average of β̂1 across tests for which the null is rejected is closer to the true value of β1 when β1 is much different from 0. 
+We can see the averages of slope estimates β̂1 (across all tests) are close to the true parameter β1. The sample average of β̂1 across tests for which the null is rejected is closer to the true value of β1 when β1 is much different from 0 (except for when β1 is 0 because then the null and alternative distributions are mostly overlapping, and thus the rejected sample has slope estimates (different from 0) that center around 0 and their average is close to 0).
 
 When we take a sample of estimated slopes based on criteria p < 0.05, it is not random sampling, and therefore, the sample mean -- average of estimates for each β1-- might be biased. This can be observed through how far off the slope estimates are in the rejected sample from the true paramater. However, as the parameter increases, β̂1 estimates the paramater better. This is because:
 
